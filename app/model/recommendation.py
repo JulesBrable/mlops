@@ -68,4 +68,4 @@ class Recommender:
             i for i, score in enumerate(cosine_sim) if score >= similarity_threshold
             ]
 
-        return self.df.iloc[recommended_indices][['Titre', 'Chapeau', 'Description', 'URL']]
+        return self.df.iloc[recommended_indices]
