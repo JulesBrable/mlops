@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mlops
-        image: jbrable/mlops:latest
+        image: jbrable/mlops:v0.0.1
         ports:
         - containerPort: 80
         resources:
