@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from model.recommendation import Recommender
+from src.models.recommendation import Recommender
 
 @st.cache_data
 def load_data():

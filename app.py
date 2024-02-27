@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-from utils.etl import get_recommendations, show_recommendations
-from utils.map import generate_map
+from src.utils.etl import get_recommendations, show_recommendations
+from src.utils.map import generate_map
 
 st.set_page_config(
     page_title="Paris Events Recommender",
