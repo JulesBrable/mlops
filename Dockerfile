@@ -14,8 +14,8 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-EXPOSE 8000
+EXPOSE 5000
 
-HEALTHCHECK CMD curl --fail http://localhost:8000/_stcore/health
+HEALTHCHECK CMD curl --fail http://localhost:5000/_stcore/health
 
 ENTRYPOINT ["bash", "-c", "./run.sh"]
