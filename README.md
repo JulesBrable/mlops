@@ -1,4 +1,5 @@
-# mlops
+# mlops [![Construction image Docker](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml/badge.svg)](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml)
+
 Repository for the final project of the MLOps course (taught by R. Avouac &amp; L. Galiana during 2nd Semester of the final year at ENSAE Paris).
 
 ## Setup Instructions
@@ -45,8 +46,6 @@ cd app
 ```bash
 streamlit run app.py --server.port=8000
 ```
-
-[![Construction image Docker](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml/badge.svg)](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml)
 
 ## Contact
 
