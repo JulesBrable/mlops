@@ -18,4 +18,4 @@ EXPOSE 8000
 
 HEALTHCHECK CMD curl --fail http://localhost:8000/_stcore/health
 
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
+ENTRYPOINT ["bash", "-c", "./run.sh"]
