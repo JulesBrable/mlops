@@ -46,6 +46,8 @@ cd app
 streamlit run app.py --server.port=8000
 ```
 
+[![Construction image Docker](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml/badge.svg)](https://github.com/JulesBrable/mlops/actions/workflows/prod.yaml)
+
 ## Contact
 
 * [Jules Brablé](https://github.com/JulesBrable) - jules.brable@ensae.fr
