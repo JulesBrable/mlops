@@ -1,5 +1,6 @@
+"""Streamlit Homepage"""
+
 import streamlit as st
-import pandas as pd
 
 from src.utils.etl import get_recommendations, show_recommendations
 from src.utils.map import generate_map
