@@ -31,7 +31,10 @@ query = st.sidebar.text_input("Enter your query:", "Sortie familiale en nature")
 
 if st.button("Press this to get your recommendation"):
     if query:
-        recommendations = get_recommendations(query)
+        with st.spinner('🧠 Searching for recommendations using NLP...'):
+            recommendations = get_recommendations(query)
+        st.success('Done!')
+
         if recommendations is not None and not recommendations.empty:
             recommendations[['Latitude', 'Longitude']] = (
                 recommendations['Coordonnées géographiques']
