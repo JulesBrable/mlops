@@ -5,12 +5,12 @@ metadata:
 spec:
   project: default
   source:
-1    repoURL: https://github.com/JulesBrable/mlops.git
-2    targetRevision: main
+    repoURL: https://github.com/JulesBrable/mlops.git
+    targetRevision: main
     path: deployment
   destination:
     server: https://kubernetes.default.svc
-3    namespace: user-jbrablx
+    namespace: user-jbrablx
   syncPolicy:
     automated:
       selfHeal: true
