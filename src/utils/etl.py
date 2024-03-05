@@ -28,6 +28,10 @@ def get_recommendations(query):
     return recommender.get_recommendations(query)
 
 
+def get_digest_date(date_col):
+    return parser.parse(date_col).strftime('%B %d, %Y, %H:%M')
+
+
 def show_recommendations(recommendations):
     """Displays recommendations in an interactive format using Streamlit."""
     st.markdown(
@@ -39,7 +43,7 @@ def show_recommendations(recommendations):
             st.markdown(f"**Description:** {row['Description']}", unsafe_allow_html=True)
             st.write(f"""
             **Date:**
-            From {parser.parse(row['Date de début']).strftime('%B %d, %Y, %H:%M')}
-            to {parser.parse(row['Date de fin']).strftime('%B %d, %Y, %H:%M')}
+            From {get_digest_date(row['Date de début'])}
+            to {get_digest_date(row['Date de fin'])}
             """)
             st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
