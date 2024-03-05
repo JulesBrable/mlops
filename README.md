@@ -2,9 +2,19 @@
 
 Repository for the final project of the MLOps course (taught by R. Avouac &amp; L. Galiana during 2nd Semester of the final year at ENSAE Paris).
 
+<br>
+
+To access our [`Streamlit`](https://streamlit.io/) app, that is, the main output of this project, one can access the latest deployed version just by clicking [here](https://mlops.kub.sspcloud.fr/). Indeed, the app is deployed on a `Kubernetes` cluster hosted by [SSP Cloud](https://datalab.sspcloud.fr/).
+
+<br>
+
+On the other hand, you might want to run this app locally. This is why we are giving you the following steps to set the project up.
+
 ## Setup Instructions
 
-From the command line, you will have to follow the following steps to set this project up:
+### General instructions
+
+Firstly, from the command line, you will have to run the following commands:
 
 1. Clone this repository:
 
@@ -16,6 +26,22 @@ git clone https://github.com/JulesBrable/mlops.git
 ```bash
 cd mlops
 ```
+
+Then, choose between [option **A**](#A.-If-you-have-[`Docker`](https://www.docker.com/)-installed:) and option [option **A**](#A.-If-you-have-[`conda`](https://docs.conda.io/)):
+
+### A. If you have [`Docker`](https://www.docker.com/) installed:
+
+3. Build the Docker image:
+```bash
+docker build -t mlops .
+```
+
+4. Run the Docker container:
+```bash
+docker run -p 5000:5000 mlops
+```
+
+### B. If you have [`conda`](https://docs.conda.io/) installed:
 
 3. Create and activate conda env:
 
@@ -33,18 +59,12 @@ conda activate mlops
 pip install -r requirements.txt
 ```
 
-## Web application
+### Run the app locally:
 
-1. Go to the app folder:
-
-```bash
-cd app
-```
-
-2. Run this app locally:
+By default, we are using port 5000, so once you have run the following command, you will be able to access the app with the following link: [http://localhost:5010/](http://localhost:5000/).
 
 ```bash
-streamlit run app.py --server.port=8000
+streamlit run Homepage.py --server.port=5000
 ```
 
 ## Contact
