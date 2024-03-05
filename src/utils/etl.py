@@ -2,6 +2,8 @@
 
 import streamlit as st
 import pandas as pd
+from dateutil import parser
+
 from src.models.recommendation import Recommender
 
 
@@ -28,9 +30,16 @@ def get_recommendations(query):
 
 def show_recommendations(recommendations):
     """Displays recommendations in an interactive format using Streamlit."""
-    st.write("Recommendations:")
+    st.markdown(
+        "Recommendations:",
+        help="Click on the expander for more info about the event"
+        )
     for _, row in recommendations.iterrows():
         with st.expander(rf":pencil2:  **{row['Titre']}** - {row['Chapeau']}"):
-            st.write(f"**Description:** {row['Description']}")
-            st.write(f"**Date:** {row['Date de début']} - {row['Date de fin']}")
+            st.markdown(f"**Description:** {row['Description']}", unsafe_allow_html=True)
+            st.write(f"""
+            **Date:**
+            From {parser.parse(row['Date de début']).strftime('%B %d, %Y, %H:%M')}
+            to {parser.parse(row['Date de fin']).strftime('%B %d, %Y, %H:%M')}
+            """)
             st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
