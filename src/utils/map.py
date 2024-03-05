@@ -2,6 +2,7 @@
 
 import folium
 from streamlit_folium import folium_static
+from src.utils.etl import get_digest_date
 
 
 def add_markers_to_map(m, recommendations):
@@ -26,7 +27,8 @@ def add_markers_to_map(m, recommendations):
             chapeau=row['Chapeau'],
             lieu=row['Nom du lieu'],
             adresse=row['Adresse du lieu'],
-            date=row['Date de début']
+            begin_date=get_digest_date(row['Date de début']),
+            end_date=get_digest_date(row['Date de fin'])
         )
         popup = folium.Popup(folium.Html(html, script=True), parse_html=True)
         icon = 'eye-open'
@@ -60,7 +62,7 @@ def generate_map(recommendations):
     folium_static(m)
 
 
-def popup_html(titre, chapeau, lieu, adresse, date):
+def popup_html(titre, chapeau, lieu, adresse, begin_date, end_date):
     """
     Creates a customized popup for the folium map, using HTML and CSS.
     Allows to give more specific information about a given point of the map.
@@ -70,23 +72,27 @@ def popup_html(titre, chapeau, lieu, adresse, date):
     <html>
         <head>
             <style>
-                p {{
-                  background-color: #00a0a0;
-                  color: white;
-                  padding: 10px 10px 10px 10px;
-                  border: 2px solid #101357;
+                .popup-content {{
+                  background-color: #f2f2f2; /* Light grey background */
+                  color: #333; /* Darker text color for contrast */
+                  padding: 8px; /* Uniform padding */
+                  border: 1px solid #ddd; /* Lighter border */
                   border-radius: 5px;
+                  font-size: 14px; /* Adjusted font size */
+                  font-family: Arial, sans-serif; /* Standard web-safe font */
+                  width: 200px; /* Minimum width to encourage square shape */
+                  height: 200px; /* Minimum height to encourage square shape */
+                  display: flex;
+                  flex-direction: column;
                 }}
             </style>
         </head>
         <body>
-            <p>
-                <strong>{titre}</strong>&nbsp;{chapeau}
-                <br>
-                <strong>{lieu}:</strong>&nbsp;{adresse}&nbsp;seconds
-                <br>
-                <strong>Date:</strong>&nbsp;{date}
-            </p>
+            <div class="popup-content">
+                <strong>{titre}</strong><br>
+                🍭{lieu}, {adresse}<br>
+                📅From {begin_date} to {end_date}
+            </div>
         </body>
     </html>"""
 
