@@ -2,17 +2,19 @@
 
 import streamlit as st
 import pandas as pd
+from dateutil import parser
+
 from src.models.recommendation import Recommender
 
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data():
     """Loads event data from a specified CSV file hosted online."""
     df = pd.read_csv("https://minio.lab.sspcloud.fr/jbrablx/mlops/data/raw/data.csv", sep=";")
     return df
 
 
-@st.cache_resource()
+@st.cache_resource(show_spinner=False)
 def load_recommender():
     """Initializes and returns a Recommender system instance."""
     df = load_data()
@@ -26,11 +28,22 @@ def get_recommendations(query):
     return recommender.get_recommendations(query)
 
 
+def get_digest_date(date_col):
+    return parser.parse(date_col).strftime('%B %d, %Y, %H:%M')
+
+
 def show_recommendations(recommendations):
     """Displays recommendations in an interactive format using Streamlit."""
-    st.write("Recommendations:")
+    st.markdown(
+        "Recommendations:",
+        help="Click on the expander for more info about the event"
+        )
     for _, row in recommendations.iterrows():
         with st.expander(rf":pencil2:  **{row['Titre']}** - {row['Chapeau']}"):
-            st.write(f"**Description:** {row['Description']}")
-            st.write(f"**Date:** {row['Date de début']} - {row['Date de fin']}")
+            st.markdown(f"**Description:** {row['Description']}", unsafe_allow_html=True)
+            st.write(f"""
+            **Date:**
+            From {get_digest_date(row['Date de début'])}
+            to {get_digest_date(row['Date de fin'])}
+            """)
             st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
