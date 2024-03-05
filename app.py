@@ -7,7 +7,7 @@ from src.utils.map import generate_map
 
 st.set_page_config(
     page_title="Paris Events Recommender",
-    page_icon="🎉",
+    page_icon=":tada:",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
@@ -25,13 +25,30 @@ st.set_page_config(
     }
 )
 
-st.title("Paris Events Recommender")
+st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 
-query = st.sidebar.text_input("Enter your query:", "Sortie familiale en nature")
+st.markdown("""
+  <style>
+  div.stButton {text-align:center}
+  </style>""", unsafe_allow_html=True)
 
-if st.button("Press this to get your recommendation"):
+st.markdown("""
+    <style>
+    div.stSpinner > div {
+    text-align:center;
+    align-items: center;
+    justify-content: center;
+    }
+    </style>""", unsafe_allow_html=True)
+
+query = st.sidebar.text_input(
+    "**Enter your query:**",
+    "Sortie familiale en nature",
+    help="_Please enter an event idea on which to query the recommendation engine._")
+
+if st.button("Press this to get your event recommendations", type="primary"):
     if query:
-        with st.spinner('🧠 Searching for recommendations using NLP...'):
+        with st.spinner(':brain: Searching for recommendations using NLP...'):
             recommendations = get_recommendations(query)
         st.success('Done!')
 
@@ -46,5 +63,3 @@ if st.button("Press this to get your recommendation"):
             generate_map(recommendations)
         else:
             st.write("No recommendations found for your query.")
-else:
-    st.write("Please enter a query to get recommendations.")
