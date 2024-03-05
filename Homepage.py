@@ -22,3 +22,5 @@ st.set_page_config(
         """
     }
 )
+
+st.markdown("Some presentation elements about the app & its purpose")
