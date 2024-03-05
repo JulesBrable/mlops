@@ -33,7 +33,7 @@ class Recommender:
             df (pd.DataFrame): The DataFrame containing the recommendation data.
         """
         self.df = df
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
 
     def compute_embeddings(self, texts: List[str]) -> np.ndarray:
         """
