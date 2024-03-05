@@ -7,19 +7,8 @@ from src.utils.map import generate_map
 
 st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 
-st.markdown("""
-  <style>
-  div.stButton {text-align:center}
-  </style>""", unsafe_allow_html=True)
-
-st.markdown("""
-    <style>
-    div.stSpinner > div {
-    text-align:center;
-    align-items: center;
-    justify-content: center;
-    }
-    </style>""", unsafe_allow_html=True)
+with open("static/styles.css") as f:
+    st.markdown(f"""<style>{f.read()}</style>""", unsafe_allow_html=True)
 
 query = st.sidebar.text_input(
     "**Enter your query:**",
