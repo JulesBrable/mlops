@@ -27,9 +27,9 @@ git clone https://github.com/JulesBrable/mlops.git
 cd mlops
 ```
 
-Then, choose between [option **A**](#A.-If-you-have-[`Docker`](https://www.docker.com/)-installed:) and option [option **A**](#A.-If-you-have-[`conda`](https://docs.conda.io/)):
+Then choose one of the following options, depending on whether you prefer to use [`Docker`](https://www.docker.com/) or [`conda`](https://docs.conda.io/).
 
-### A. If you have [`Docker`](https://www.docker.com/) installed:
+### Option A: you have [`Docker`](https://www.docker.com/) installed:
 
 3. Build the Docker image:
 ```bash
@@ -41,7 +41,7 @@ docker build -t mlops .
 docker run -p 5000:5000 mlops
 ```
 
-### B. If you have [`conda`](https://docs.conda.io/) installed:
+### Option B: you have [`conda`](https://docs.conda.io/) installed:
 
 3. Create and activate conda env:
 
