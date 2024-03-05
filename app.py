@@ -25,6 +25,8 @@ st.set_page_config(
     }
 )
 
+st.title("Paris Events Recommender")
+
 query = st.sidebar.text_input("Enter your query:", "Sortie familiale en nature")
 
 if st.button("Press this to get your recommendation"):

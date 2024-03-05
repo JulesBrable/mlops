@@ -5,14 +5,14 @@ import pandas as pd
 from src.models.recommendation import Recommender
 
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data():
     """Loads event data from a specified CSV file hosted online."""
     df = pd.read_csv("https://minio.lab.sspcloud.fr/jbrablx/mlops/data/raw/data.csv", sep=";")
     return df
 
 
-@st.cache_resource()
+@st.cache_resource(show_spinner=False)
 def load_recommender():
     """Initializes and returns a Recommender system instance."""
     df = load_data()
