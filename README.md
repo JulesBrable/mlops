@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 ### Run the app locally:
 
-By default, we are using port 5000, so once you have run the following command, you will be able to access the app with the following link: [http://localhost:5010/](http://localhost:5000/).
+By default, we are using port 5000, so once you have run the following command, you will be able to access the app with the following link: [http://localhost:5000/](http://localhost:5000/).
 
 ```bash
 streamlit run Homepage.py --server.port=5000
