@@ -20,7 +20,7 @@ def add_markers_to_map(m, recommendations):
         None: This function modifies the map object in place and does not return any value.
     """
     for _, row in recommendations.iterrows():
-        tooltip = "<strong>{row['Titre']}</strong><br>"
+        tooltip = f"<strong>{row['Titre']}</strong><br>"
         html = popup_html(
             titre=row['Titre'],
             chapeau=row['Chapeau'],
