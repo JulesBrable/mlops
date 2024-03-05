@@ -7,7 +7,7 @@ from src.utils.map import generate_map
 
 st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 
-with open("static/styles.css") as f:
+with open("./styles.css") as f:
     st.markdown(f"""<style>{f.read()}</style>""", unsafe_allow_html=True)
 
 query = st.sidebar.text_input(
@@ -17,7 +17,7 @@ query = st.sidebar.text_input(
 
 if st.button("Press this to get your event recommendations", type="primary"):
     if query:
-        with st.spinner(':brain: Searching for recommendations using NLP...'):
+        with st.spinner(':brain: _Searching for recommendations using NLP..._'):
             recommendations = get_recommendations(query)
         st.success('Done!')
 
