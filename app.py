@@ -8,7 +8,7 @@ from src.utils.map import generate_map
 st.set_page_config(
     page_title="Paris Events Recommender",
     page_icon="🎉",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         'Report a bug': "https://github.com/JulesBrable/mlops/issues/new",
@@ -24,8 +24,6 @@ st.set_page_config(
         """
     }
 )
-
-st.title("Recommendation System")
 
 query = st.sidebar.text_input("Enter your query:", "Sortie familiale en nature")
 
