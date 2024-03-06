@@ -10,3 +10,8 @@ def load_content(file_path: str):
 def make_config(file_path: str = 'assets/config.json'):
     config = load_content(file_path)
     st.set_page_config(**config)
+
+
+def load_style(style_path: str = "assets/styles.css"):
+    with open(style_path) as f:
+        st.markdown(f"""<style>{f.read()}</style>""", unsafe_allow_html=True)
