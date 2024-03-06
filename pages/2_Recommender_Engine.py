@@ -4,6 +4,8 @@ import streamlit as st
 
 from src.utils.etl import get_recommendations, show_recommendations
 from src.utils.map import generate_map
+from src.utils.translation import query_to_french, lead_text_translator
+from langdetect import detect
 
 st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 
@@ -18,7 +20,20 @@ query = st.sidebar.text_input(
 if st.button("Press this to get your event recommendations", type="primary"):
     if query:
         with st.spinner(':brain: _Searching for recommendations using NLP..._'):
-            recommendations = get_recommendations(query)
+            source_language = detect(query)
+            if source_language == 'fr':
+                query_french = query + ''
+            else:
+                query_french = query_to_french(query)
+
+            recommendations = get_recommendations(query_french)
+
+        if source_language != 'fr':
+            with st.spinner(':brain: _Translation of the results..._'):
+                recommendations = lead_text_translator(
+                    df=recommendations,
+                    column_names=['Chapeau', 'Description'],
+                    target=source_language)
         st.success('Done!')
 
         if recommendations is not None and not recommendations.empty:
