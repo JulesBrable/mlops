@@ -1,6 +1,6 @@
-torch==2.0.1
-sentence-transformers==2.3.1
+torch
+sentence-transformers
 pandas
-streamlit==1.29.0
-folium==0.15.1
-streamlit-folium==0.18.0
+streamlit
+folium
+streamlit-folium
