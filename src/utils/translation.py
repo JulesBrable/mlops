@@ -12,10 +12,10 @@ def translator(
         text: str, translator_function,
         target: str = 'en', source: str = 'auto'
         ) -> str:
-    if len(text) <= 5000:
+    if len(str(text)) <= 5000:
         return translator_function.translate(text=text)
     else:
-        N = len(text) // 5000
+        N = len(str(text)) // 5000
         output = ''
         for k in range(N):
             input_plus = text[5000 * N: 5000 * (N + 1)]
