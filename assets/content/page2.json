@@ -1,4 +1,4 @@
 {
-    "spinner_nlp": "':brain: _Searching for recommendations using NLP (this should take less than 30 seconds)..._'",
-    "spinner_translator": ":speaking_head: _Translation of the results (this should take roughly 1min)..._"
+    "spinner_nlp": ":brain: _Searching for recommendations using NLP (this should take less than 30 seconds)..._",
+    "spinner_translator": "🗣️ _Translation of the results (this should take roughly 1min)..._"
 }
