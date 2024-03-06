@@ -29,6 +29,10 @@ def get_recommendations(query):
 
 
 def get_digest_date(date_col):
+    # print('Date = {}'.format(date_col))
+    # print('Date type = {}'.format(type(date_col)))
+    if str(date_col) == 'nan':
+        return ''
     return parser.parse(date_col).strftime('%B %d, %Y, %H:%M')
 
 
