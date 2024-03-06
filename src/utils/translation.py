@@ -24,6 +24,10 @@ def translator(
         return output
 
 
+def translate_query(source_language, query, target_language: str = "fr"):
+    return query + '' if source_language == target_language else query_to_french(query)
+
+
 def query_to_french(query):
     return GoogleTranslator(source='auto', target='french').translate(
         text=query)
