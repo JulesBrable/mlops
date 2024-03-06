@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from dateutil import parser
+import re
 
 from src.models.recommendation import Recommender
 
@@ -39,8 +40,27 @@ def get_coordinates(df, col):
     return df
 
 
-def preprocess_df(df, col_geo, date_cols):
+def get_arrondissement(df, col_ville, col_cp):
+    df["cp_tempo"] = df[col_cp].apply(
+        lambda x: "" if pd.isna(x) else re.sub(r'\s+|[^0-9]', '', str(x))[3:5]
+        )
+    df["cp_tempo"] = df["cp_tempo"].apply(lambda x: '0' + x if len(x) < 2 and x != "" else x)
+    df["cp_tempo"] = np.where(df[col_ville] == "Paris", df["cp_tempo"], np.nan)
+    df.loc[df["cp_tempo"].eq("00"), "cp_tempo"] = np.nan
+    return df["cp_tempo"].values
+
+
+def preprocess_df(
+    df,
+    col_geo='Coordonnées géographiques',
+    date_cols=["Date de début", "Date de fin"],
+    col_ville="Ville",
+    col_cp="Code postal"
+):
     df = get_coordinates(df, col_geo)
+    df["Département"] = df[col_cp].str[:2]
+    df[col_ville] = np.where(df["Département"] == "75", "Paris", df[col_ville])
+    df["Arrondissement"] = get_arrondissement(df, col_ville, col_cp)
 
     for col in list(date_cols):
         df[col] = handle_na(df, col, "")
