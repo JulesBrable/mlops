@@ -10,16 +10,15 @@ from src.models.recommendation import Recommender
 
 
 @st.cache_data(show_spinner=False)
-def load_data():
+def load_data(url: str = "https://minio.lab.sspcloud.fr/jbrablx/mlops/data/raw/data.csv"):
     """Loads event data from a specified CSV file hosted online."""
-    df = pd.read_csv("https://minio.lab.sspcloud.fr/jbrablx/mlops/data/raw/data.csv", sep=";")
+    df = pd.read_csv(url, sep=";")
     return df
 
 
 @st.cache_resource(show_spinner=False)
-def load_recommender():
+def load_recommender(df: pd.DataFrame):
     """Initializes and returns a Recommender system instance."""
-    df = load_data()
     recommender = Recommender(df)
     return recommender
 
@@ -52,11 +51,13 @@ def get_arrondissement(df, col_ville, col_cp):
 
 def preprocess_df(
     df,
+    col_list,
     col_geo='Coordonnées géographiques',
     date_cols=["Date de début", "Date de fin"],
     col_ville="Ville",
     col_cp="Code postal"
 ):
+    df = df[col_list]
     df = get_coordinates(df, col_geo)
     df["Département"] = df[col_cp].str[:2]
     df[col_ville] = np.where(df["Département"] == "75", "Paris", df[col_ville])
@@ -64,12 +65,16 @@ def preprocess_df(
 
     for col in list(date_cols):
         df[col] = handle_na(df, col, "")
+
+    for col in list(col_list + ["Arrondissement", "Département"]):
+        df[col] = np.where(df[col].astype(str) == "nan", "Not specified", df[col])
+
     return df
 
 
-def get_recommendations(query):
+def get_recommendations(df, query):
     """Fetches recommendations based on a user query."""
-    recommender = load_recommender()
+    recommender = load_recommender(df)
     return recommender.get_recommendations(query)
 
 
