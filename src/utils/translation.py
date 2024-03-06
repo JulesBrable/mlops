@@ -10,10 +10,9 @@ def get_list_languages():
 
 def translator(
         text: str, translator_function,
-        target: str = 'en', source: str = 'auto') -> str:
-    if str(text) == 'nan':
-        return ''
-    elif len(text) <= 5000:
+        target: str = 'en', source: str = 'auto'
+        ) -> str:
+    if len(text) <= 5000:
         return translator_function.translate(text=text)
     else:
         N = len(text) // 5000
