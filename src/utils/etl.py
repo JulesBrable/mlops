@@ -8,7 +8,6 @@ from stop_words import get_stop_words
 import re
 from src.models.recommendation import Recommender
 from nltk.util import bigrams
-import nltk
 from collections import Counter
 
 
@@ -25,6 +24,7 @@ def load_recommender(df: pd.DataFrame):
     recommender = Recommender(df)
     return recommender
 
+
 @st.cache_resource(show_spinner=False)
 def plot_wordclout():
     df = load_data()
@@ -33,16 +33,17 @@ def plot_wordclout():
     wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400, mode="RGBA").generate(text)
     return wordcloud
 
+
 @st.cache_resource(show_spinner=False)
 def plot_wordclout_from_bigrams():
-    
+
     df = load_data()
     data = df['Mots clés'].astype(str).values.tolist()
     filtered_data = [item.split(',') for item in data if item != 'nan']
-    
+
     bigram_list = [bigram for sublist in filtered_data for bigram in bigrams(sublist)]
     bigram_strings = ['/'.join(bigram) for bigram in bigram_list]
-    
+
     bigram_frequency = Counter(bigram_strings)
     wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(bigram_frequency)
     return wordcloud
@@ -74,6 +75,27 @@ def get_arrondissement(df, col_ville, col_cp):
     return df["cp_tempo"].values
 
 
+def clean_audience(row):
+    row = re.sub(' +', ' ', row)
+
+    l = ["adultes", "enfants", "adolescents"]
+
+    audience_conditions = {
+        "Tout public": lambda r: "Tout public" in r or all(kw in r for kw in l),
+        "Public enfants adolescents": lambda r: all(kw in r for kw in [l[1], l[2]]) and l[0] not in r,
+        "Public enfants adultes": lambda r: all(kw in r for kw in [l[0], l[1]]) and l[2] not in r,
+        "Public adolescents adultes": lambda r: all(kw in r for kw in [l[0], l[2]]) and l[1] not in r,
+        "Public enfants": lambda r: l[1] in r and all(kw not in r for kw in [l[0], l[2]]),
+        "Public adolescents": lambda r: l[2] in r and all(kw not in r for kw in [l[0], l[1]]),
+        "Public adultes": lambda r: l[0] in r and all(kw not in r for kw in [l[1], l[2]]),
+    }
+
+    for response, condition in audience_conditions.items():
+        if condition(row):
+            return response
+    return row
+
+
 def preprocess_df(
     df,
     col_list,
@@ -87,6 +109,7 @@ def preprocess_df(
     df["Département"] = df[col_cp].str[:2]
     df[col_ville] = np.where(df["Département"] == "75", "Paris", df[col_ville])
     df["Arrondissement"] = get_arrondissement(df, col_ville, col_cp)
+    df["audience"] = df["audience"].apply(lambda x: clean_audience(x))
 
     for col in list(date_cols):
         df[col] = handle_na(df, col, "")
@@ -127,6 +150,3 @@ def show_recommendations(recommendations):
                 to {get_digest_date(row['Date de fin'])}
                 """)
             st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
-            
-            
-
