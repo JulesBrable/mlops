@@ -22,10 +22,10 @@ query = st.sidebar.text_input(
     )
 
 df = load_data()
-
 df = preprocess_df(df, content["col_list"])
 
 tabs = st.tabs(["Filters", "Results"])
+
 with tabs[0]:
     city = st.multiselect("**Select a city:**", list(df["Ville"].unique()), default=list(df["Ville"].unique()))
     arr = st.multiselect("**Select an arrondissement:**", list(df["Arrondissement"].unique()), default=list(df["Arrondissement"].unique()))
@@ -41,6 +41,8 @@ df = df[df["Ville"].isin(city)]
 reco_button = st.sidebar.button("Press this to get your event recommendations", type="primary")
 
 with tabs[1]:
+    if not reco_button:
+        st.markdown("Please query our recommender engine from the sidebar panel! 😊")
     if 'recommendations' not in st.session_state or reco_button:
         if query and reco_button:
             with st.spinner(content["spinner_nlp"]):
@@ -62,7 +64,8 @@ with tabs[1]:
                 st.session_state.recommendations = recommendations
             else:
                 st.markdown("No recommendations found for your query.")
-
+    else:
+        pass
     if 'recommendations' in st.session_state and not st.session_state.recommendations.empty:
         show_recommendations(st.session_state.recommendations)
         generate_map(st.session_state.recommendations)
