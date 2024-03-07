@@ -52,9 +52,10 @@ def generate_map(recommendations):
     Returns:
         None: The function creates and displays an interactive map using Folium.
     """
-    location = recommendations[['Latitude', 'Longitude']]
+    recommendations_filtered = recommendations.dropna(subset=['Latitude', 'Longitude'])
+    location = recommendations_filtered[['Latitude', 'Longitude']]
     m = folium.Map(location=location.mean().values.tolist())
-    add_markers_to_map(m, recommendations)
+    add_markers_to_map(m, recommendations_filtered)
 
     sw = location.min().values.tolist()
     ne = location.max().values.tolist()

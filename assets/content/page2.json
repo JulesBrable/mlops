@@ -1,0 +1,5 @@
+{
+    "spinner_nlp": ":brain: _Searching for recommendations using NLP (this should take less than 30 seconds)..._",
+    "spinner_translator": "🗣️ _Translation of the results (this should take roughly 1min)..._",
+    "col_list": ["Titre", "Chapeau", "Nom du lieu", "Adresse du lieu", "Date de début", "Date de fin", "Coordonnées géographiques", "Type de prix", "Code postal", "Ville", "Accès PMR", "Accès mal voyant", "Accès mal entendant", "Type d'accès", "audience", "Mots clés"]
+}
