@@ -1,12 +1,15 @@
 """ETL pipelines that are being used in the Streamlit App"""
-
 import pandas as pd
 import numpy as np
 import streamlit as st
 from dateutil import parser
+from wordcloud import WordCloud
+from stop_words import get_stop_words
 import re
-
 from src.models.recommendation import Recommender
+from nltk.util import bigrams
+import nltk
+from collections import Counter
 
 
 @st.cache_data(show_spinner=False)
@@ -21,6 +24,28 @@ def load_recommender(df: pd.DataFrame):
     """Initializes and returns a Recommender system instance."""
     recommender = Recommender(df)
     return recommender
+
+@st.cache_resource(show_spinner=False)
+def plot_wordclout():
+    df = load_data()
+    text = " ".join(str(review) for review in df['Mots clés'] if review and not pd.isnull(review))
+    stopwords = set(get_stop_words('french'))
+    wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400, mode="RGBA").generate(text)
+    return wordcloud
+
+@st.cache_resource(show_spinner=False)
+def plot_wordclout_from_bigrams():
+    
+    df = load_data()
+    data = df['Mots clés'].astype(str).values.tolist()
+    filtered_data = [item.split(',') for item in data if item != 'nan']
+    
+    bigram_list = [bigram for sublist in filtered_data for bigram in bigrams(sublist)]
+    bigram_strings = ['/'.join(bigram) for bigram in bigram_list]
+    
+    bigram_frequency = Counter(bigram_strings)
+    wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(bigram_frequency)
+    return wordcloud
 
 
 def handle_na(df, col, to_replace):
@@ -102,3 +127,6 @@ def show_recommendations(recommendations):
                 to {get_digest_date(row['Date de fin'])}
                 """)
             st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
+            
+            
+
