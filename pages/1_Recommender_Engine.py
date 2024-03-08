@@ -1,13 +1,12 @@
 """Recommender Engine"""
-
 import streamlit as st
 from langdetect import detect
 
-from src.utils.etl import load_data, preprocess_df, get_recommendations, show_recommendations
+from src.utils.etl import load_data, preprocess_df, get_recommendations, filter_df
 from src.utils.map import generate_map
 from src.utils.translation import lead_text_translator, translate_query
-from src.utils.utils import load_content, make_config, load_style, to_excel, download_results
-
+from src.utils.utils import load_content, make_config, load_style, to_excel
+import src.utils.page1_ui as p1
 
 make_config()
 load_style()
@@ -24,19 +23,39 @@ query = st.sidebar.text_input(
 df = load_data()
 df = preprocess_df(df, content["col_list"])
 
-tabs = st.tabs(["Filters", "Results"])
+tabs = st.tabs(["Filters the Events", "Show Recommender Results"])
 
 with tabs[0]:
-    city = st.multiselect("**Select a city:**", list(df["Ville"].unique()), default=list(df["Ville"].unique()))
-    arr = st.multiselect("**Select an arrondissement:**", list(df["Arrondissement"].unique()), default=list(df["Arrondissement"].unique()))
-    price = st.multiselect("**Type de prix**", list(df["Type de prix"].unique()), default=list(df["Type de prix"].unique()))
-    amv = st.multiselect("**Select a amv:**", list(df["Accès mal voyant"].unique()), default=list(df["Accès mal voyant"].unique()))
-    ame = st.multiselect("**Select a ame:**", list(df["Accès mal entendant"].unique()), default=list(df["Accès mal entendant"].unique()))
-    apmr = st.multiselect("**Select a apmr:**", list(df["Accès PMR"].unique()), default=list(df["Accès PMR"].unique()))
-    reservation = st.multiselect("**Select a reservation:**", list(df["Type d'accès"].unique()), default=list(df["Type d'accès"].unique()))
-    audience = st.multiselect("**Select an audience:**", list(df["audience"].unique()), default=list(df["audience"].unique()))
+    cols = st.columns(2, gap="medium")
+    with cols[0]:
+        city = p1.create_expander_multiselect("Filter by city", df, "Ville")
+        if "Paris" in city:
+            arr = p1.create_expander_multiselect("Filter by arrondissement", df, "Arrondissement")
+        else:
+            arr = None
+        price = p1.create_expander_multiselect("Filter by pricing type", df, "Type de prix")
+        reservation = p1.create_expander_multiselect("Filter by booking type", df, "Type d'accès")
+        audience = p1.create_expander_multiselect("Filter by audience type", df, "audience")
 
-df = df[df["Ville"].isin(city)]
+        st.markdown("##### Specific choices for disabled access:")
+        subcols = st.columns(3)
+        with subcols[0]:
+            amv = st.toggle("With blind access", value=False)
+        with subcols[1]:
+            ame = st.toggle("With hearing-impaired access", value=False)
+        with subcols[2]:
+            apmr = st.toggle("With access for the mobility impaired", value=False)
+    filters = [f if f else None for f in [city, arr, price, reservation, audience, amv, ame, apmr]]
+    df = filter_df(df, filters)
+
+    with cols[1]:
+        st.metric("Number of events", df.shape[0])
+
+        st.markdown(
+            "##### Let's look at the most present words to inspire you for your query and give you some ideas!"
+            )
+        grams = st.radio("**Wordcloud type:**", ["Uni-grams", "Bi-grams"], horizontal=True)
+        wordcloud = p1.plot_wordcloud(df, grams)
 
 reco_button = st.sidebar.button("Press this to get your event recommendations", type="primary")
 
@@ -67,7 +86,7 @@ with tabs[1]:
     else:
         pass
     if 'recommendations' in st.session_state and not st.session_state.recommendations.empty:
-        show_recommendations(st.session_state.recommendations)
+        p1.show_recommendations(st.session_state.recommendations)
         generate_map(st.session_state.recommendations)
         df_xlsx = to_excel(st.session_state.recommendations)
-        download_results(df_xlsx)
+        p1.download_results(df_xlsx)
