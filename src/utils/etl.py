@@ -3,12 +3,9 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 from dateutil import parser
-from wordcloud import WordCloud
-from stop_words import get_stop_words
 import re
+
 from src.models.recommendation import Recommender
-from nltk.util import bigrams
-from collections import Counter
 
 
 @st.cache_data(show_spinner=False)
@@ -23,30 +20,6 @@ def load_recommender(df: pd.DataFrame):
     """Initializes and returns a Recommender system instance."""
     recommender = Recommender(df)
     return recommender
-
-
-@st.cache_resource(show_spinner=False)
-def plot_wordclout():
-    df = load_data()
-    text = " ".join(str(review) for review in df['Mots clés'] if review and not pd.isnull(review))
-    stopwords = set(get_stop_words('french'))
-    wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400, mode="RGBA").generate(text)
-    return wordcloud
-
-
-@st.cache_resource(show_spinner=False)
-def plot_wordclout_from_bigrams():
-
-    df = load_data()
-    data = df['Mots clés'].astype(str).values.tolist()
-    filtered_data = [item.split(',') for item in data if item != 'nan']
-
-    bigram_list = [bigram for sublist in filtered_data for bigram in bigrams(sublist)]
-    bigram_strings = ['/'.join(bigram) for bigram in bigram_list]
-
-    bigram_frequency = Counter(bigram_strings)
-    wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(bigram_frequency)
-    return wordcloud
 
 
 def handle_na(df, col, to_replace):
@@ -110,13 +83,28 @@ def preprocess_df(
     df[col_ville] = np.where(df["Département"] == "75", "Paris", df[col_ville])
     df["Arrondissement"] = get_arrondissement(df, col_ville, col_cp)
     df["audience"] = df["audience"].apply(lambda x: clean_audience(x))
-
+    
     for col in list(date_cols):
         df[col] = handle_na(df, col, "")
 
     for col in list(col_list + ["Arrondissement", "Département"]):
-        df[col] = np.where(df[col].astype(str) == "nan", "Not specified", df[col])
+        df[col] = np.where(df[col].astype(str) == "nan", "Not specified", df[col])    
+    return df
 
+
+def filter_df(
+    df: pd.DataFrame,
+    filters
+):
+    df = df[df["Ville"].isin(filters[0])]
+    if "Paris" in filters[0]:
+        df = df[df["Arrondissement"].isin(filters[1])]
+    df = df[df["Type de prix"].isin(filters[2])]
+    df = df[df["Type d'accès"].isin(filters[3])]
+    df = df[df["audience"].isin(filters[4])]
+    df = df[df["Accès mal voyant"] == "1.0"] if filters[5] else df
+    df = df[df["Accès mal entendant"] == "1.0"] if filters[6] else df
+    df = df[df["Accès PMR"] == "1.0"] if filters[7] else df
     return df
 
 
@@ -132,21 +120,3 @@ def get_digest_date(date_col):
     except parser.ParserError:
         date_col = ""
     return date_col
-
-
-def show_recommendations(recommendations):
-    """Displays recommendations in an interactive format using Streamlit."""
-    st.markdown(
-        "##### Recommendations:",
-        help="Click on the expander for more info about the event"
-        )
-    for _, row in recommendations.iterrows():
-        with st.expander(rf":pencil2:  **{row['Titre']}** - {row['Chapeau']}"):
-            st.markdown(f"**Description:** {row['Description']}", unsafe_allow_html=True)
-            if (row['Date de début'] != "") and (row['Date de fin'] != ""):
-                st.write(f"""
-                **Date:**
-                From {get_digest_date(row['Date de début'])}
-                to {get_digest_date(row['Date de fin'])}
-                """)
-            st.write(f"**Plus d'informations en cliquant [ici]({row['URL']}).**")
