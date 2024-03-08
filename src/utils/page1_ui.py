@@ -45,6 +45,35 @@ def plot_wordcloud(df, gram):
     return st.pyplot(fig)
 
 
+def plot_category_distributions(df, column_names):
+    """
+    Plots the distribution of categories for the given list of columns
+    in the DataFrame as a single figure with multiple subplots.
+
+    Parameters:
+    - df: pandas.DataFrame containing the data
+    - column_names: list of strings, names of the columns to plot
+    """
+    num_columns = len(column_names)
+
+    fig, axs = plt.subplots(1, num_columns, figsize=(5 * num_columns, 5))
+
+    if num_columns == 1:
+        axs = [axs]
+
+    for ax, column in zip(axs, column_names):
+        value_counts = df[column].value_counts()
+
+        ax.bar(value_counts.index, value_counts.values, color='skyblue', edgecolor='black')
+        ax.set_title(f'{column}')
+        ax.set_ylabel('Frequency')
+        plt.sca(ax)
+        plt.xticks(rotation=45)
+
+    plt.tight_layout()
+    st.pyplot(fig)
+
+
 def show_recommendations(recommendations):
     """Displays recommendations in an interactive format using Streamlit."""
     st.markdown(

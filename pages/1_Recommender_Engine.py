@@ -17,25 +17,32 @@ st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 query = st.sidebar.text_input(
     "**Enter your query:**",
     "Sortie familiale en nature",
-    help="_Please enter an event idea on which to query the recommendation engine._"
+    help=content["help_input"]
     )
 
 df = load_data()
 df = preprocess_df(df, content["col_list"])
 
-tabs = st.tabs(["Filters the Events", "Show Recommender Results"])
+tabs = st.tabs(["Filtering criteria & Statistics", "Recommender Results"])
 
 with tabs[0]:
+    st.markdown("### Filters")
+    st.markdown(
+        """In this section, you can filter events according to various criteria. You are
+        then invited to consult the statistics calculated below and/or query our recommendation
+        engine (recommendations will be made on the basis of filtered events)."""
+        )
+
     cols = st.columns(2, gap="medium")
     with cols[0]:
+        price = p1.create_expander_multiselect("Filter by pricing type", df, "Type de prix")
+        audience = p1.create_expander_multiselect("Filter by audience type", df, "audience")
         city = p1.create_expander_multiselect("Filter by city", df, "Ville")
         if "Paris" in city:
             arr = p1.create_expander_multiselect("Filter by arrondissement", df, "Arrondissement")
         else:
             arr = None
-        price = p1.create_expander_multiselect("Filter by pricing type", df, "Type de prix")
         reservation = p1.create_expander_multiselect("Filter by booking type", df, "Type d'accès")
-        audience = p1.create_expander_multiselect("Filter by audience type", df, "audience")
 
         st.markdown("##### Specific choices for disabled access:")
         subcols = st.columns(3)
@@ -50,14 +57,21 @@ with tabs[0]:
 
     with cols[1]:
         subsubcols = st.columns(2)
-        with subsubcols[0]:
+        with st.columns([1/5, 3/5, 1/5])[1]:
             st.metric("Number of events", df.shape[0])
 
-        st.markdown(
-            "##### Let's look at the most present words to inspire you for your query!"
+        st.markdown("""
+        ##### Let's look at the most present words to inspire you for your query!
+        Select a wordcloud type:
+        """)
+        grams = st.radio(
+            "e", ["Uni-grams", "Bi-grams"], horizontal=True, label_visibility="collapsed"
             )
-        grams = st.radio("**Wordcloud type:**", ["Uni-grams", "Bi-grams"], horizontal=True)
         wordcloud = p1.plot_wordcloud(df, grams)
+
+    st.markdown("### Charts")
+    p1.plot_category_distributions(df, ["Type de prix", "audience", "Type d'accès"])
+    p1.plot_category_distributions(df, ["Accès mal voyant", "Accès mal entendant", "Accès PMR"])
 
 reco_button = st.sidebar.button("Press this to get your event recommendations", type="primary")
 
@@ -70,7 +84,7 @@ with tabs[1]:
                 source_language = detect(query)
                 query_french = translate_query(source_language, query)
                 recommendations = get_recommendations(df, query_french)
-            st.success('Recommendations Done!')
+            st.success(f"Recommendations done: {recommendations.shape[0]} events found!")
 
             if (recommendations is not None) and (not recommendations.empty):
                 recommendations = preprocess_df(recommendations, content["col_list"])
