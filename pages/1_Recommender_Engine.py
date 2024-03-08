@@ -10,7 +10,7 @@ import src.utils.page1_ui as p1
 
 make_config()
 load_style()
-content = load_content('assets/content/page2.json')
+content = load_content('assets/content/page1.json')
 
 st.columns([1/100, 98/100, 1/100])[1].title(":tada: Paris Events Recommender")
 
@@ -49,10 +49,12 @@ with tabs[0]:
     df = filter_df(df, filters)
 
     with cols[1]:
-        st.metric("Number of events", df.shape[0])
+        subsubcols = st.columns(2)
+        with subsubcols[0]:
+            st.metric("Number of events", df.shape[0])
 
         st.markdown(
-            "##### Let's look at the most present words to inspire you for your query and give you some ideas!"
+            "##### Let's look at the most present words to inspire you for your query!"
             )
         grams = st.radio("**Wordcloud type:**", ["Uni-grams", "Bi-grams"], horizontal=True)
         wordcloud = p1.plot_wordcloud(df, grams)
