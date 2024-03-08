@@ -83,12 +83,17 @@ def preprocess_df(
     df[col_ville] = np.where(df["Département"] == "75", "Paris", df[col_ville])
     df["Arrondissement"] = get_arrondissement(df, col_ville, col_cp)
     df["audience"] = df["audience"].apply(lambda x: clean_audience(x))
-    
+
     for col in list(date_cols):
         df[col] = handle_na(df, col, "")
 
-    for col in list(col_list + ["Arrondissement", "Département"]):
-        df[col] = np.where(df[col].astype(str) == "nan", "Not specified", df[col])    
+    cols_to_preprocess = list(
+        [
+            elem for elem in col_list if elem not in ['Coordonnées géographiques']
+        ] + ["Arrondissement", "Département"]
+    )
+    for col in cols_to_preprocess:
+        df[col] = np.where(df[col].astype(str) == "nan", "Not specified", df[col])
     return df
 
 
