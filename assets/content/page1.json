@@ -1,5 +1,6 @@
 {
     "spinner_nlp": ":brain: _Searching for recommendations using NLP (this should take less than 30 seconds)..._",
     "spinner_translator": "🗣️ _Translation of the results (this should take roughly 1min)..._",
-    "col_list": ["Titre", "Chapeau", "Description", "Nom du lieu", "Adresse du lieu", "Date de début", "Date de fin", "URL", "Coordonnées géographiques", "Type de prix", "Code postal", "Ville", "Accès PMR", "Accès mal voyant", "Accès mal entendant", "Type d'accès", "audience", "Mots clés"]
+    "col_list": ["Titre", "Chapeau", "Description", "Nom du lieu", "Adresse du lieu", "Date de début", "Date de fin", "URL", "Coordonnées géographiques", "Type de prix", "Code postal", "Ville", "Accès PMR", "Accès mal voyant", "Accès mal entendant", "Type d'accès", "audience", "Mots clés"],
+    "help_input": "_Please enter an event idea on which to query the recommendation engine. **NB:** We are equipped with a translator, so don't hesitate to ask our recommendation engine in the language of your choice, and it will answer you in the same language as your entry!_"
 }
