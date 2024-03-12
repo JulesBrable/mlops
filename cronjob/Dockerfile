@@ -14,10 +14,9 @@ ADD https://dl.min.io/client/mc/release/linux-amd64/mc /usr/bin/mc
 RUN chmod +x /usr/bin/mc
 
 COPY . .
-RUN dir -s
 RUN pip install -r requirements.txt
 
 # Add permissions
-RUN chmod +x /get_data.sh
+RUN chmod +x get_data.sh
 
 CMD ["/get_data.sh"]
