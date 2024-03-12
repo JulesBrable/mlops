@@ -2,7 +2,7 @@
 
 FROM python:3.9.16
 
-WORKDIR ${HOME}/mlops
+WORKDIR ${HOME}/mlops/app
 
 RUN apt-get update && apt-get install -y \
     build-essential \

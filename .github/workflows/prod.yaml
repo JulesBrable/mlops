@@ -19,8 +19,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Build and push first
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app
+          push: true
+          tags: jbrable/mlops:v1.5.4
+      -
         name: Build and push
         uses: docker/build-push-action@v5
         with:
+          context: ./cronjob
           push: true
-          tags: jbrable/mlops:v1.5.4
+          tags: jbrable/my-cronjob:latest

@@ -7,7 +7,7 @@ spec:
   source:
     repoURL: https://github.com/JulesBrable/mlops.git
     targetRevision: main
-    path: deployment
+    path: k8s/deployment
   destination:
     server: https://kubernetes.default.svc
     namespace: user-jbrablx
