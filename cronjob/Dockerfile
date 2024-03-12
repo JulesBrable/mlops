@@ -3,7 +3,11 @@ FROM python:3.9.16
 
 WORKDIR ${HOME}/mlops/cronjob
 
-RUN apk add --no-cache curl jq bash
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    bash \
+    && rm -rf /var/lib/apt/lists/*
 
 # Download and install the MinIO Client (mc)
 ADD https://dl.min.io/client/mc/release/linux-amd64/mc /usr/bin/mc
