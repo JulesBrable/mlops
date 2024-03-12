@@ -7,7 +7,7 @@ FILENAME="test_${TODAY}.csv"
 TARGET_PATH="mlops/data/raw/${FILENAME}"
 TEMP_FILE="/tmp/${FILENAME}"
 
-python fetch_data.py $URL $TEMP_FILE
+python3 fetch_data.py $URL $TEMP_FILE
 
 if [ -s $TEMP_FILE ]; then
     echo "CSV file created successfully."

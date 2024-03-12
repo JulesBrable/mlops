@@ -4,7 +4,7 @@ FROM alpine:latest
 WORKDIR ${HOME}/mlops/cronjob
 
 # Install curl, jq, and bash
-RUN apk add --no-cache curl jq bash
+RUN apk add --no-cache curl jq bash python3 py3-pip
 
 # Download and install the MinIO Client (mc)
 ADD https://dl.min.io/client/mc/release/linux-amd64/mc /usr/bin/mc
