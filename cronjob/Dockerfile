@@ -3,14 +3,15 @@ FROM alpine:latest
 
 WORKDIR ${HOME}/mlops/cronjob
 
-# Install curl, jq, and bash
-RUN apk add --no-cache curl jq bash python3 py3-pip
+RUN apk add --no-cache curl jq bash python3 py3-pip \
+    && python3 -m venv /venv \
+    && /venv/bin/pip install --upgrade pip
 
 # Download and install the MinIO Client (mc)
 ADD https://dl.min.io/client/mc/release/linux-amd64/mc /usr/bin/mc
 RUN chmod +x /usr/bin/mc
 
-RUN pip install -r requirements.txt
+RUN /venv/bin/pip install -r requirements.txt
 
 # Add script to the container with permissions
 COPY . .
