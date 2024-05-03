@@ -58,14 +58,12 @@ class Recommender:
         Returns:
             pd.DataFrame: Recommended items.
         """
-        texts = self.df['Chapeau'].tolist() + [query]
+        texts = self.df['Chapeau'].str.lower().tolist() + [query.lower()]
         embeddings = self.compute_embeddings(texts)
 
         query_embedding = embeddings[-1].reshape(1, -1)
         cosine_sim = cosine_similarity(query_embedding, embeddings[:-1])[0]
 
-        recommended_indices = [
-            i for i, score in enumerate(cosine_sim) if score >= similarity_threshold
-            ]
+        top_indices = np.argsort(cosine_sim)[::-1][:4]
 
-        return self.df.iloc[recommended_indices]
+        return self.df.iloc[top_indices]
