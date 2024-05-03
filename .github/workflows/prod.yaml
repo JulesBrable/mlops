@@ -25,4 +25,4 @@ jobs:
       with:
         context: ./app
         push: true
-        tags: jbrable/mlops:v1.5.6
+        tags: jbrable/mlops:v1.5.7
