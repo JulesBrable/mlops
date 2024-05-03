@@ -73,6 +73,7 @@ with tabs[0]:
     p1.plot_category_distributions(df, ["Type de prix", "audience", "Type d'accès"])
     p1.plot_category_distributions(df, ["Accès mal voyant", "Accès mal entendant", "Accès PMR"])
 
+d = st.sidebar.checkbox("Check this if your query is not in french language", value=False)
 reco_button = st.sidebar.button("Press this to get your event recommendations", type="primary")
 
 with tabs[1]:
@@ -81,7 +82,7 @@ with tabs[1]:
     if 'recommendations' not in st.session_state or reco_button:
         if query and reco_button:
             with st.spinner(content["spinner_nlp"]):
-                source_language = detect(query)
+                source_language = detect(query) if d else 'fr'
                 query_french = translate_query(source_language, query)
                 recommendations = get_recommendations(df, query_french)
             st.success(f"Recommendations done: {recommendations.shape[0]} events found!")
